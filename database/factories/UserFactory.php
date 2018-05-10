@@ -21,3 +21,10 @@ $factory->define(App\User::class, function (Faker $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(App\Model\UserGroup::class, function (Faker $faker) {
+    return [
+        'name' => str_random(5),
+        'permission' => rand(1, 10),
+    ];
+});

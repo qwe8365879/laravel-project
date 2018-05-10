@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Model\UserGroup;
 use App\Transformers\UserTransformer;
 use Cyvelnet\Laravel5Fractal\Facades\Fractal;
 use Illuminate\Support\Facades\Hash;
@@ -15,6 +16,10 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
+        $lookingForName = 'admin';
+        $users = User::whereDoesntHave('userGroups', function ($query) use ($lookingForName) {
+            $query->where('name', $lookingForName);
+        })->get();
         return Fractal::collection($users, new UserTransformer);
     }
 

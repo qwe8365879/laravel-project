@@ -29,6 +29,14 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function userGroups(){
+        return $this->belongsToMany('App\Model\UserGroup');
+    }
+
+    public function isAdmin(){
+        return $this->user_group;
+    }
+
     public function articles(){
         return $this->hasMany('App\Model\Article', 'author_id', 'id');
     }
