@@ -59,6 +59,12 @@ class Handler extends ExceptionHandler
                 'error' => 'Error login detail'
             ], 401);
         }
+
+        if ($exception instanceof AccessDenyException && $request->wantsJson()) {
+            return response()->json([
+                'error' => 'Access Denies!'
+            ], 403);
+        }
         return parent::render($request, $exception);
     }
 }
