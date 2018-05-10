@@ -19,16 +19,13 @@ class ArticleController extends Controller
         // return response()->json($articles, 200);
     }
 
-    public function show(Request $request, $id){
+    public function show($id){
         $article = Article::find($id);
-        // if($request->user('api')->id != $article->author_id){
-        //     return response()->json(['error' => 'You don\'t have permission.'], 403);
-        // }
         return Fractal::includes('author')->item($article, new  ArticleTransformer); 
         // return response()->json($article, 200);
     }
 
-    public function store(\App\Http\Requests\Api\Article\Store $request){
+    public function store(\App\Http\Requests\Api\Article\StoreArticleRequest $request){
         $article = new Article;
         $article->author_id = $request->user()->id;
         $article->title = $request->title;
@@ -40,12 +37,8 @@ class ArticleController extends Controller
         // return response()->json($article, 201);
     }
 
-    public function update(\App\Http\Requests\Api\Article\Update $request, $id){
+    public function update(\App\Http\Requests\Api\Article\UpdateArticleRequest $request, $id){
         $article = Article::findOrFail($id);
-
-        if($request->user('api')->id != $article->author_id){
-            throw new AccessDenyException($request);
-        }
         $article->title = $request->get('title', $article->title);
         $article->description = $request->get('description', $article->description);
         $article->slug = $request->has('title') ? str_slug( $request->get('title') ) : $article->slug;
@@ -57,9 +50,6 @@ class ArticleController extends Controller
 
     public function destroy(Request $request, $id){
         $article = Article::findOrFail($id);
-        if($request->user('api')->id != $article->author_id){
-            throw new AccessDenyException($request);
-        }
         $article->delete();
 
         return response()->json(null, 204);

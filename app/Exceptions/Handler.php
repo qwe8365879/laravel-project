@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
 
         if ($exception instanceof FailedInternalRequestException && $request->wantsJson()) {
             return response()->json([
-                'error' => 'Error login detail'
+                'error' => 'Username or Password Error!'
             ], 401);
         }
 
@@ -65,6 +65,13 @@ class Handler extends ExceptionHandler
                 'error' => 'Access Denies!'
             ], 403);
         }
+
+        if ($exception instanceof NotFoundHttpException && $request->wantsJson()) {
+            return response()->json([
+                'error' => 'Resource not found'
+            ], 404);
+        }
+        
         return parent::render($request, $exception);
     }
 }
