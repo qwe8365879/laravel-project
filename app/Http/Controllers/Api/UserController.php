@@ -20,13 +20,28 @@ class UserController extends Controller
         $users = User::whereDoesntHave('userGroups', function ($query) use ($lookingForName) {
             $query->where('name', $lookingForName);
         })->get();
-        return Fractal::collection($users, new UserTransformer);
+        return Fractal::includes('userGroups')->collection($users, new UserTransformer);
     }
 
     public function show($id)
     {
         $user = User::findOrFail($id);
         return Fractal::includes('articles')->item($user, new UserTransformer);
+    }
+
+    public function store(\App\Http\Requests\Api\User\StoreUserRequest $request)
+    {
+        $user = new User;
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make( $request->password );
+
+        $user->save();
+
+        $user->userGroups()->attach($request->user_group);
+        
+        return Fractal::item($user, new  UserTransformer); 
     }
 
     public function update(\App\Http\Requests\Api\User\UpdateUserRequest $request, $id)

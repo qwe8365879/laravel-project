@@ -16,7 +16,7 @@ class ArticleTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['author'];
+    protected $availableIncludes = ['author','categories'];
 
     /**
      * List of resources to automatically include
@@ -46,5 +46,10 @@ class ArticleTransformer extends TransformerAbstract
     public function includeAuthor(Article $article)
     {
         return $this->item($article->author, new UserTransformer);
+    }
+
+    public function includeCategories(Article $article)
+    {
+        return $this->collection($article->categories, new CategoryTransformer);
     }
 }

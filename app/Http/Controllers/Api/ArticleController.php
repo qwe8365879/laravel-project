@@ -8,20 +8,21 @@ use App\Model\Article;
 use App\Transformers\ArticleTransformer;
 use Cyvelnet\Laravel5Fractal\Facades\Fractal;
 use App\Exceptions\AccessDenyException;
+use Illuminate\Support\Facades\DB;
 
 class ArticleController extends Controller
 {
     //
-    public function index(){
-        $articles = Article::all();
+    public function index(Request $request){
+        $articles = Article::filter($request->all());
 
-        return Fractal::includes('author')->collection($articles, new  ArticleTransformer); 
+        return Fractal::includes(['author','categories'])->collection($articles, new  ArticleTransformer); 
         // return response()->json($articles, 200);
     }
 
     public function show($id){
         $article = Article::find($id);
-        return Fractal::includes('author')->item($article, new  ArticleTransformer); 
+        return Fractal::includes(['author','categories'])->item($article, new  ArticleTransformer); 
         // return response()->json($article, 200);
     }
 
@@ -33,7 +34,9 @@ class ArticleController extends Controller
         $article->description = $request->description;
         $article->save();
 
-        return Fractal::includes('author')->item($article, new  ArticleTransformer); 
+        $article->categories()->attach($request->categories);
+
+        return Fractal::includes(['author','categories'])->item($article, new  ArticleTransformer); 
         // return response()->json($article, 201);
     }
 
@@ -44,7 +47,11 @@ class ArticleController extends Controller
         $article->slug = $request->has('title') ? str_slug( $request->get('title') ) : $article->slug;
         $article->update();
 
-        return Fractal::includes('author')->item($article, new  ArticleTransformer); 
+        if($request->categories){
+            $article->categories()->sync($request->categories);
+        }
+
+        return Fractal::includes(['author','categories'])->item($article, new  ArticleTransformer); 
         // return response()->json($article, 200);
     }
 

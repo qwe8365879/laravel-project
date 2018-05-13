@@ -41,6 +41,9 @@ class RegisterController extends Controller
         $user->password = Hash::make( $request->password );
 
         $user->save();
+
+        $user->userGroups()->attach(\App\Model\UserGroup::DEFUALT_USER_GROUP);
+        
         return response()->json($user, 201);
     }
 }

@@ -29,15 +29,23 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /**
+     * The UserGroup Objects that linked with this user
+     * 
+     * @return UserGroup[]
+     */
     public function userGroups(){
-        return $this->belongsToMany('App\Model\UserGroup');
+        return $this->belongsToMany(App\Model\UserGroup::class);
     }
 
     public function isAdmin(){
-        return $this->user_group;
+        foreach($this->userGroups as $userGroup){
+            if($userGroup->id == 1) return true;
+        }
+        return false;
     }
 
     public function articles(){
-        return $this->hasMany('App\Model\Article', 'author_id', 'id');
+        return $this->hasMany(App\Model\Article::class, 'author_id', 'id');
     }
 }

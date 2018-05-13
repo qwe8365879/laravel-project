@@ -36,7 +36,5 @@ class IsOwner
         }else{
             throw new \App\Exceptions\AccessDenyException($request);
         }
-
-        
     }
 }
