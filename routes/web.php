@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group([
+    'prefix'    =>  'notifications'
+],
+function(){
+    Route::get('/', 'NotificationController@index');
+    Route::get('/{id}', 'NotificationController@show');
+});
