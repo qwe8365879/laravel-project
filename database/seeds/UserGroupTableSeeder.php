@@ -11,6 +11,23 @@ class UserGroupTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Model\UserGroup::class, 5)->create();
+        DB::table('user_groups')->insert([
+            [
+                'name' => 'admin',
+                'permission' => 1
+            ],
+            [
+                'name' => 'manager',
+                'permission' => 2
+            ],
+            [
+                'name' => 'contributor',
+                'permission' => 3
+            ],
+            [
+                'name' => 'reader',
+                'permission' => 4
+            ]
+        ]);
     }
 }
