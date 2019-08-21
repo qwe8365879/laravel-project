@@ -39,7 +39,7 @@ class LoginController extends Controller
 
         // Create request
         $request = Request::create('/oauth/token', 'POST', $data, [], [], [
-            'HTTP_Accept'             => 'application/json',
+            
         ]);
         // Get response
         $response = $this->app->handle($request);

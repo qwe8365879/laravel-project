@@ -35,7 +35,7 @@ class User extends Authenticatable
      * @return UserGroup[]
      */
     public function userGroups(){
-        return $this->belongsToMany(App\Model\UserGroup::class);
+        return $this->belongsToMany(Model\UserGroup::class);
     }
 
     public function isAdmin(){
